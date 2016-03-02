@@ -1,2 +1,2 @@
 calculer la fitnesse avec le nombre d'eval(hist)
-- enregister le nb d'eval et le nb de fitnesse et la solutions
+- enregister le nb d'eval , le nb de fitnesse et la solutions
