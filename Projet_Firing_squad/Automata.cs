@@ -206,7 +206,7 @@ namespace Projet_Firing_squad
 							nouvelle_regle = new int[2];
 							nouvelle_regle [0] = i;
 							nouvelle_regle [1] = j;
-							liste.Add (nouvelle_regle);
+							liste.Add (nouvelle_regle);// modifier l'algorithme
 						}
 					}
 				}
@@ -275,13 +275,22 @@ namespace Projet_Firing_squad
 				}
 				Console.WriteLine( nb_de_fusiller_atteints[i] + " square resolved");
 			}
+
+			StreamWriter fichier = new StreamWriter("/home/massawi33/svg/rules.txt",true);
+
+			printToFile(best_square,best_rules,fichier);
+
 			for (int i = 2; i <= nb_square; i++) {
 				
 				best_square = this.evol(best_rules, i);
 				Console.WriteLine(i + " : " + best_square);
 				this.exportSVG(i, 2 * i - 2, "/home/massawi33/svg/" + i + ".svg");
 			}
+
+
 		}
+
+
 
 
 
@@ -410,6 +419,20 @@ namespace Projet_Firing_squad
 			} catch (Exception e) {
 				Console.WriteLine (e.ToString ());
 			}
+		}
+
+		/*********************************************
+	     Print to file
+	     *********************************************/
+
+		public static void printToFile(int fitness, int [] rules, StreamWriter ecrivain) {
+			ecrivain.Write(fitness);
+			for(int i = 0; i < 216; i++) {
+				ecrivain.Write(" ");
+				ecrivain.Write(rules[i]);
+			}
+			ecrivain.WriteLine();
+			ecrivain.Close ();
 		}
 	}
 }
