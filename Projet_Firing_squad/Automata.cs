@@ -296,7 +296,7 @@ namespace Projet_Firing_squad
 
 
 		//**************************************************
-		// Hill Climber
+		// Hill Climber First 
 		//**************************************************
 
 		public int[] Hill_Climber (int[] rules, int sizeMax, int nbeval)
@@ -346,6 +346,138 @@ namespace Projet_Firing_squad
 			}
 			return bestSolutions;
 			
+		}
+
+		//**************************************************
+		// Hill Climber Best 
+		//**************************************************
+
+		public int[] Hill_Climber_Best (int[] rules, int sizeMax, int nbeval)
+		{
+			ArrayList<int[]>  liste_all_neigbors = Possible_neighbors (rules);
+			int[] bestSolutions = rules;
+			//Random rdm = new Random ();
+			//int curentFitness = this.f (rules, sizeMax);
+			//int bestFitness = curentFitness;
+			//int rdm_int = -1;
+			int[] regles = new int[2];
+			//int[] regles ;
+			int[] new_rules;
+			int best_fit = 0;
+			int new_fit = 0;
+			int[] exclu = new int[liste_all_neigbors.Count];
+			int k = 0;
+
+			for (int i = 0; i < nbeval; i++) {
+				if (liste_all_neigbors.Count == 0) {
+					break;
+				}
+
+				int c = liste_all_neigbors.Count;
+				int position = -1;
+				best_fit = this.f (bestSolutions, sizeMax);// recalculage 
+				//rdm_int = rdm.Next (liste_all_neigbors.Count);
+				for(int j = 0 ; j < c ; j++){
+					if (exclu.Contains (j)) {
+						continue;
+					}
+					regles = liste_all_neigbors [j];
+					new_rules = Neighbors_Rules (bestSolutions, regles [0], regles [1]);
+
+					new_fit = this.f (new_rules, sizeMax);
+					if (new_fit >= best_fit) {
+
+						position = j;
+						best_fit = new_fit;
+					}
+
+				}
+				if (position != -1) {
+					exclu [k] = position;
+					k++;
+					regles = liste_all_neigbors [position];
+					liste_all_neigbors.RemoveAt (position);
+
+					new_rules =  Neighbors_Rules (bestSolutions, regles [0], regles [1]);
+					bestSolutions = new_rules;
+
+					liste_all_neigbors.Clear();
+					liste_all_neigbors = Possible_neighbors (bestSolutions);
+				}
+
+				//rdm_int = rdm.Next (c);
+
+				//regles = liste_all_neigbors [rdm_int];
+				//liste_all_neigbors.RemoveAt (rdm_int);// couteux
+
+				//new_rules = Neighbors_Rules (bestSolutions, regles [0], regles [1]);
+
+				//best_fit = this.f (bestSolutions, sizeMax);// recalculage 
+				//new_fit = this.f (new_rules, sizeMax);
+
+
+				//if (new_fit >= best_fit) {
+
+				//	bestSolutions = new_rules;
+					/*for (int j = 0; j < bestSolutions.Length; j++) {
+						bestSolutions[j] = new_rules[j];
+					}*/
+				//	liste_all_neigbors.Clear();
+				//	liste_all_neigbors = Possible_neighbors (bestSolutions);
+				//}
+
+
+			}
+			return bestSolutions;
+
+		}
+		//************************************************
+		// Test du hill climber Best
+		//************************************************
+		public void Test_Hill_Climber_best(int taille_square , int nb , int nbeval ){
+
+			int best_square = 0;
+			int[] best_rules = new int[216];
+			int[] resolved_rules = null;
+			int[] nb_de_fusiller_atteints = new int[nb];
+
+			//Automata automateTest = new Automata(taille);
+
+			int nb_square = 0;
+			Console.WriteLine("beginning of the algorithm");
+
+			for (int i = 0; i < nb; i++) {
+
+				Initialization initTest = new Initialization();
+				int[] reglesTest = new int[216];
+
+				initTest.init(reglesTest);
+
+				resolved_rules = this.Hill_Climber_Best(reglesTest, taille_square , nbeval);
+				nb_de_fusiller_atteints[i] = this.f(resolved_rules, taille_square);
+
+				if (nb_de_fusiller_atteints[i] > best_square) {
+					for (int j = 0; j < resolved_rules.Length; j++) {
+						best_rules[j] = resolved_rules[j];
+					}
+					best_square = nb_de_fusiller_atteints[i];
+					nb_square = best_square;
+				}
+				Console.WriteLine( nb_de_fusiller_atteints[i] + " square resolved");
+			}
+
+			StreamWriter fichier = new StreamWriter("/home/massawi33/svg/rules.txt",true);
+
+			printToFile(best_square,best_rules,fichier);
+
+			for (int i = 2; i <= nb_square; i++) {
+
+				best_square = this.evol(best_rules, i);
+				Console.WriteLine(i + " : " + best_square);
+				this.exportSVG(i, 2 * i - 2, "/home/massawi33/svg/" + i + ".svg");
+			}
+
+
 		}
 
 

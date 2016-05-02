@@ -61,8 +61,8 @@ namespace Projet_Firing_squad
 			Console.WriteLine("The End.");*/
 			int taille = 20;
 			Automata at = new Automata (taille);
-			at.Test_Hill_Climber (taille,10,50000);
-
+			//at.Test_Hill_Climber (taille,10,50000);
+			at.Test_Hill_Climber_best(taille,100,1000);
 
 
 
