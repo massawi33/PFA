@@ -62,8 +62,8 @@ namespace Projet_Firing_squad
 			int taille = 20;
 			Automata at = new Automata (taille);
 			//at.Test_Hill_Climber (taille,10,50000);
-			at.Test_Hill_Climber_best(taille,100,1000);
-
+			at.Test_Hill_Climber_best(taille,100,10000);
+			//at.Evolutionaire(20,10,1000,5,3);
 
 
 		}

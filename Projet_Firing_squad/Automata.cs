@@ -365,8 +365,9 @@ namespace Projet_Firing_squad
 			int[] new_rules;
 			int best_fit = 0;
 			int new_fit = 0;
-			int[] exclu = new int[liste_all_neigbors.Count];
-			int k = 0;
+			//int[] exclu = new int[liste_all_neigbors.Count];
+			ArrayList<int>  exclu = new ArrayList<int>();
+			//int k = 0;
 
 			for (int i = 0; i < nbeval; i++) {
 				if (liste_all_neigbors.Count == 0) {
@@ -385,7 +386,7 @@ namespace Projet_Firing_squad
 					new_rules = Neighbors_Rules (bestSolutions, regles [0], regles [1]);
 
 					new_fit = this.f (new_rules, sizeMax);
-					if (new_fit >= best_fit) {
+					if (new_fit > best_fit) {
 
 						position = j;
 						best_fit = new_fit;
@@ -393,13 +394,13 @@ namespace Projet_Firing_squad
 
 				}
 				if (position != -1) {
-					exclu [k] = position;
-					k++;
+					exclu.Add (position);
+
 					regles = liste_all_neigbors [position];
-					liste_all_neigbors.RemoveAt (position);
+					//liste_all_neigbors.RemoveAt (position);
 
 					new_rules =  Neighbors_Rules (bestSolutions, regles [0], regles [1]);
-					bestSolutions = new_rules;
+					bestSolutions = (int[])new_rules.Clone();
 
 					liste_all_neigbors.Clear();
 					liste_all_neigbors = Possible_neighbors (bestSolutions);
@@ -479,7 +480,6 @@ namespace Projet_Firing_squad
 
 
 		}
-
 
 
 		/*********************************************
