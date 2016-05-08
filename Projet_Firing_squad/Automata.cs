@@ -481,6 +481,136 @@ namespace Projet_Firing_squad
 
 		}
 
+		//************************************************
+		// Algorithme Evolutionaire
+		//************************************************
+
+		public void Evolutionaire(int taille_square , int nb , int nbeval ,int nbGeneration, int nbPopulation ){
+
+			//int[] Population = new int[nbPopulation];
+			//int[] P2 = null;
+			//int[] P3 = null;
+			Initialization initTest = new Initialization();
+			int[] reglesTest = new int[216];
+			ArrayList<int[]> Population = new ArrayList<int[]> ();
+			int best_fitnesse = -1;
+			int position_best_fitensse = -1;
+			ArrayList<int> best_population = new ArrayList<int> ();
+			int nb_population_voulu = 4; // doit etre pair
+			int nb_croisement = 50;
+
+			Console.WriteLine("begin initialisation");
+			for (int i = 0; i < nbPopulation; i++) { //inisialisation des population voulu
+				
+				initTest.init(reglesTest);
+				Population.Add (this.Hill_Climber (reglesTest, taille_square, nbeval));
+			}
+			//initTest.init(reglesTest);
+			//P1 = this.Hill_Climber_Best(reglesTest, taille_square , nbeval);
+			//initTest.init(reglesTest);
+			//P2 = this.Hill_Climber_Best(reglesTest, taille_square , nbeval);
+			//initTest.init(reglesTest);
+			//P3 = this.Hill_Climber_Best(reglesTest, taille_square , nbeval);
+			//int f1 = this.f(P1, taille_square);
+			//int f2 = this.f(P2, taille_square);
+			//int f3 = this.f(P3, taille_square);
+			//Console.WriteLine( f1 +" "+ f2 + " "+f3);
+
+			/*for(int i = 0 ; i < nbPopulation ; i++){ // affichage des fitnesse 
+
+				int f1 = this.f(Population[i], taille_square);
+				Console.WriteLine(f1);
+
+
+			}*/
+
+			for (int genration = 0; genration < nbGeneration; genration++) {
+
+				for (int j = 0; j < nb_population_voulu; j++) {
+					for (int i = 0; i < nbPopulation; i++) {
+
+						int f1 = this.f (Population [i], taille_square);
+						if (f1 > best_fitnesse && !best_population.Contains (i)) {
+
+							best_fitnesse = f1;
+							position_best_fitensse = i;
+
+						}
+
+					}
+					if (best_fitnesse != -1) {
+
+						best_population.Add (position_best_fitensse);
+
+					}
+
+				}
+
+				for (int i = 0; i < nb_croisement; i++) { // croisement
+
+					Random rdm = new Random ();
+					int rdm_int = -1;
+					int c = 216;
+					rdm_int = rdm.Next (c);
+					for (int j = 0; j < best_population.Count; j += 2) {
+
+						int[] pop = Population [best_population [j]];
+						int[] pop2 = Population [best_population [j + 1]];
+						//int k = pop.Count();
+						int provisoire = pop [rdm_int];  
+						pop [rdm_int] = pop2 [rdm_int];
+						pop2 [rdm_int] = provisoire;
+						Population [best_population [j]] = pop;
+						Population [best_population [j + 1]] = pop2;
+					}
+					//int zizo;
+				}
+				for (int i = 0; i < nbPopulation; i++) { // mutation des population non selectionner 
+
+					if (!best_population.Contains (i)) {
+
+
+						Population.Add (this.Hill_Climber (Population [i], taille_square, nbeval));
+						Population.RemoveAt (i);
+					}
+
+
+
+
+				}
+			}
+
+			best_fitnesse = -1;
+			position_best_fitensse = -1;
+
+			for (int i = 0; i < nbPopulation; i++) {
+
+				int f1 = this.f (Population [i], taille_square);
+				//Console.WriteLine (f1);
+				if (f1 > best_fitnesse) {
+
+					best_fitnesse = f1;
+					position_best_fitensse = i;
+
+				}
+
+
+
+			}
+
+			StreamWriter fichier = new StreamWriter("/home/massawi33/svg/rules.txt",true);
+
+			printToFile(best_fitnesse,Population [position_best_fitensse],fichier);
+
+			for (int i = 2; i <= taille_square; i++) {
+
+				best_fitnesse = this.evol(Population [position_best_fitensse], i);
+				Console.WriteLine(i + " : " + best_fitnesse);
+				this.exportSVG(i, 2 * i - 2, "/home/massawi33/svg/" + i + ".svg");
+			}
+
+		}
+
 
 		/*********************************************
 	     * Export the space-time diagramme of the automa
