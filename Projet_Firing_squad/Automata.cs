@@ -274,9 +274,12 @@ namespace Projet_Firing_squad
 					nb_square = best_square;
 				}
 				Console.WriteLine( nb_de_fusiller_atteints[i] + " square resolved");
+				StreamWriter file = new StreamWriter("/home/massawi33/svg/HF/HF_nb_fusi.txt",true);
+				file.WriteLine (nb_de_fusiller_atteints [i]);
+				file.Close ();
 			}
 
-			StreamWriter fichier = new StreamWriter("/home/massawi33/svg/rules.txt",true);
+			StreamWriter fichier = new StreamWriter("/home/massawi33//svg/HF/rules.txt",true);
 
 			printToFile(best_square,best_rules,fichier);
 
@@ -284,7 +287,7 @@ namespace Projet_Firing_squad
 				
 				best_square = this.evol(best_rules, i);
 				Console.WriteLine(i + " : " + best_square);
-				this.exportSVG(i, 2 * i - 2, "/home/massawi33/svg/" + i + ".svg");
+				this.exportSVG(i, 2 * i - 2, "/home/massawi33/svg/HF/" + i + ".svg");
 			}
 
 
@@ -465,17 +468,25 @@ namespace Projet_Firing_squad
 					nb_square = best_square;
 				}
 				Console.WriteLine( nb_de_fusiller_atteints[i] + " square resolved");
+
+				StreamWriter file = new StreamWriter("/home/massawi33/svg/HB/HB_nb_fusi.txt",true);
+				file.WriteLine (nb_de_fusiller_atteints [i]);
+				file.Close ();
+
+
+
 			}
 
-			StreamWriter fichier = new StreamWriter("/home/massawi33/svg/rules.txt",true);
+			StreamWriter fichier = new StreamWriter("/home/massawi33/svg/HB/rules.txt",true);
 
 			printToFile(best_square,best_rules,fichier);
+
 
 			for (int i = 2; i <= nb_square; i++) {
 
 				best_square = this.evol(best_rules, i);
 				Console.WriteLine(i + " : " + best_square);
-				this.exportSVG(i, 2 * i - 2, "/home/massawi33/svg/" + i + ".svg");
+				this.exportSVG(i, 2 * i - 2, "/home/massawi33/svg/HB/" + i + ".svg");
 			}
 
 
@@ -578,6 +589,7 @@ namespace Projet_Firing_squad
 
 
 				}
+
 			}
 
 			best_fitnesse = -1;
@@ -591,6 +603,10 @@ namespace Projet_Firing_squad
 
 					best_fitnesse = f1;
 					position_best_fitensse = i;
+					StreamWriter file = new StreamWriter("/home/massawi33/svg/EVO/EVO_nb_fusi.txt",true);
+					file.WriteLine (best_fitnesse);
+					file.Close ();
+
 
 				}
 
@@ -598,7 +614,7 @@ namespace Projet_Firing_squad
 
 			}
 
-			StreamWriter fichier = new StreamWriter("/home/massawi33/svg/rules.txt",true);
+			StreamWriter fichier = new StreamWriter("/home/massawi33/svg/EVO/rules.txt",true);
 
 			printToFile(best_fitnesse,Population [position_best_fitensse],fichier);
 
@@ -606,7 +622,7 @@ namespace Projet_Firing_squad
 
 				best_fitnesse = this.evol(Population [position_best_fitensse], i);
 				Console.WriteLine(i + " : " + best_fitnesse);
-				this.exportSVG(i, 2 * i - 2, "/home/massawi33/svg/" + i + ".svg");
+				this.exportSVG(i, 2 * i - 2, "/home/massawi33/svg/EVO/" + i + ".svg");
 			}
 
 		}
@@ -696,6 +712,8 @@ namespace Projet_Firing_squad
 			ecrivain.WriteLine();
 			ecrivain.Close ();
 		}
+
+
 	}
 }
 
