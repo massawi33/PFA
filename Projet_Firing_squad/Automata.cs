@@ -352,6 +352,75 @@ namespace Projet_Firing_squad
 		}
 
 		//**************************************************
+		// Iterated Local Search
+		//**************************************************
+
+		public void ILS (int sizeMax, int nbeval_hill , int nbeval_ils , int nb_perturbation)
+		{
+			int[] bestsolution = new int[216];
+			int best_fitness = 0;
+			int rdm_int = 0;
+			Random rdm = new Random ();
+			int[] solution = null;
+			int fitnes = 0;
+			int[] regles = new int[2];
+			Initialization initTest = new Initialization();
+
+			Console.WriteLine ("begining");
+			initTest.init(bestsolution);
+
+
+
+			bestsolution = this.Hill_Climber (bestsolution, sizeMax, nbeval_hill);
+			ArrayList<int[]>  liste_all_neigbors = Possible_neighbors (bestsolution);
+
+			for (int i = 0; i < nbeval_ils; i++) {
+
+				for (int j = 0; j < nb_perturbation; j++) { // perturbation 20 fois
+					int c = liste_all_neigbors.Count;
+					rdm_int = rdm.Next(c);
+					regles = liste_all_neigbors [rdm_int];
+					solution = (int[])bestsolution.Clone ();
+					solution =  (int[])Neighbors_Rules (solution, regles [0], regles [1]).Clone();
+				
+				}
+
+
+				best_fitness = this.f (bestsolution, sizeMax);
+				fitnes = this.f (solution, fitnes);
+
+				if (fitnes > best_fitness) {
+
+					bestsolution = (int[])solution.Clone ();
+					best_fitness = fitnes;
+					StreamWriter file = new StreamWriter("/home/massawi33/svg/EVO/EVO_nb_fusi.txt",true);
+					file.WriteLine (best_fitness);
+					file.Close ();
+
+
+				}
+
+			
+			
+			}
+			StreamWriter fichier = new StreamWriter("/home/massawi33/svg/ILS/rules.txt",true);
+
+			printToFile(best_fitness,bestsolution,fichier);
+
+			for (int i = 2; i <= sizeMax; i++) {
+
+				best_fitness = this.evol(bestsolution, i);
+				Console.WriteLine(i + " : " + best_fitness);
+				this.exportSVG(i, 2 * i - 2, "/home/massawi33/svg/ILS/" + i + ".svg");
+			}
+
+
+
+			
+
+		}
+
+		//**************************************************
 		// Hill Climber Best 
 		//**************************************************
 
@@ -496,7 +565,7 @@ namespace Projet_Firing_squad
 		// Algorithme Evolutionaire
 		//************************************************
 
-		public void Evolutionaire(int taille_square , int nb , int nbeval ,int nbGeneration, int nbPopulation ){
+		public void Evolutionaire(int taille_square, int nbeval ,int nbGeneration, int nbPopulation , int nb_population_voulu ){
 
 			//int[] Population = new int[nbPopulation];
 			//int[] P2 = null;
@@ -507,7 +576,7 @@ namespace Projet_Firing_squad
 			int best_fitnesse = -1;
 			int position_best_fitensse = -1;
 			ArrayList<int> best_population = new ArrayList<int> ();
-			int nb_population_voulu = 4; // doit etre pair
+			//int nb_population_voulu = 4; // doit etre pair
 			int nb_croisement = 50;
 
 			Console.WriteLine("begin initialisation");
