@@ -377,12 +377,12 @@ namespace Projet_Firing_squad
 			for (int i = 0; i < nbeval_ils; i++) {
 
 				for (int j = 0; j < nb_perturbation; j++) { // perturbation 20 fois
-					int c = liste_all_neigbors.Count;
-					rdm_int = rdm.Next(c);
-					regles = liste_all_neigbors [rdm_int];
+					//int c = liste_all_neigbors.Count;
+					//rdm_int = rdm.Next(c);
+					//regles = liste_all_neigbors [rdm_int];
 					solution = (int[])bestsolution.Clone ();
-					solution =  (int[])Neighbors_Rules (solution, regles [0], regles [1]).Clone();
-				
+					//solution =  (int[])Neighbors_Rules (solution, regles [0], regles [1]).Clone();
+					this.Neighbors_Rules(solution,rdm.Next(216),rdm.Next(4));
 				}
 
 
