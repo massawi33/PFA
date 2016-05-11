@@ -355,34 +355,35 @@ namespace Projet_Firing_squad
 		// Iterated Local Search
 		//**************************************************
 
-		public void ILS (int sizeMax, int nbeval_hill , int nbeval_ils , int nb_perturbation)
+		public void ILS (int[] rules , int sizeMax, int nbeval_hill , int nbeval_ils , int nb_perturbation)
 		{
 			int[] bestsolution = new int[216];
 			int best_fitness = 0;
-			int rdm_int = 0;
+
+			//int rdm_int = 0;
 			Random rdm = new Random ();
 			int[] solution = null;
 			int fitnes = 0;
-			int[] regles = new int[2];
-			Initialization initTest = new Initialization();
+			//int[] regles = new int[2];
+			//Initialization initTest = new Initialization();
 
 			Console.WriteLine ("begining");
-			initTest.init(bestsolution);
+			//initTest.init(bestsolution);
 
 
 
-			bestsolution = this.Hill_Climber (bestsolution, sizeMax, nbeval_hill);
-			ArrayList<int[]>  liste_all_neigbors = Possible_neighbors (bestsolution);
+			bestsolution = this.Hill_Climber (rules, sizeMax, nbeval_hill);
+			//ArrayList<int[]>  liste_all_neigbors = Possible_neighbors (bestsolution);
 
 			for (int i = 0; i < nbeval_ils; i++) {
 
+				solution = (int[])bestsolution.Clone ();
 				for (int j = 0; j < nb_perturbation; j++) { // perturbation 20 fois
 					//int c = liste_all_neigbors.Count;
 					//rdm_int = rdm.Next(c);
 					//regles = liste_all_neigbors [rdm_int];
-					solution = (int[])bestsolution.Clone ();
 					//solution =  (int[])Neighbors_Rules (solution, regles [0], regles [1]).Clone();
-					this.Neighbors_Rules(solution,rdm.Next(216),rdm.Next(4));
+					solution = this.Neighbors_Rules(solution,rdm.Next(216),rdm.Next(4));
 				}
 
 
@@ -403,11 +404,14 @@ namespace Projet_Firing_squad
 			
 			
 			}
+
+
+
 			StreamWriter fichier = new StreamWriter("/home/massawi33/svg/ILS/rules.txt",true);
 
 			printToFile(best_fitness,bestsolution,fichier);
 
-			for (int i = 2; i <= sizeMax; i++) {
+			for (int i = 2; i <= sizeMax  ; i++) {
 
 				best_fitness = this.evol(bestsolution, i);
 				Console.WriteLine(i + " : " + best_fitness);
@@ -419,6 +423,34 @@ namespace Projet_Firing_squad
 			
 
 		}
+		//************************************************
+		// Test ILS
+		//************************************************
+
+		public void Test_ILS(int taille_square , int nbeval_hill, int nbeval_ils, int nb_perturbation ){
+
+			//int best_square = 0;
+			//int[] best_rules = new int[216];
+			//int[] resolved_rules = null;
+			//int[] nb_de_fusiller_atteints = new int[nb];
+			//Automata automateTest = new Automata(taille);
+
+			//int nb_square = 0;
+			Console.WriteLine("beginning of the algorithm");
+
+
+
+				Initialization initTest = new Initialization();
+				int[] reglesTest = new int[216];
+
+				initTest.init(reglesTest);
+
+				this.ILS(reglesTest, taille_square , nbeval_hill,nbeval_ils,nb_perturbation);
+				
+
+				
+		}
+
 
 		//**************************************************
 		// Hill Climber Best 
