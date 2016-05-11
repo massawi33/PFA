@@ -355,7 +355,7 @@ namespace Projet_Firing_squad
 		// Iterated Local Search
 		//**************************************************
 
-		public void ILS (int[] rules , int sizeMax, int nbeval_hill , int nbeval_ils , int nb_perturbation)
+		public int[] ILS (int[] rules , int sizeMax, int nbeval_hill , int nbeval_ils , int nb_perturbation)
 		{
 			int[] bestsolution = new int[216];
 			int best_fitness = 0;
@@ -367,7 +367,7 @@ namespace Projet_Firing_squad
 			//int[] regles = new int[2];
 			//Initialization initTest = new Initialization();
 
-			Console.WriteLine ("begining");
+			//Console.WriteLine ("begining");
 			//initTest.init(bestsolution);
 
 
@@ -401,22 +401,24 @@ namespace Projet_Firing_squad
 
 				}
 
+
 			
 			
 			}
+			return bestsolution;
 
 
 
-			StreamWriter fichier = new StreamWriter("/home/massawi33/svg/ILS/rules.txt",true);
+			//StreamWriter fichier = new StreamWriter("/home/massawi33/svg/ILS/rules.txt",true);
 
-			printToFile(best_fitness,bestsolution,fichier);
+			//printToFile(best_fitness,bestsolution,fichier);
 
-			for (int i = 2; i <= sizeMax  ; i++) {
+			//for (int i = 2; i <= sizeMax  ; i++) {
 
-				best_fitness = this.evol(bestsolution, i);
-				Console.WriteLine(i + " : " + best_fitness);
-				this.exportSVG(i, 2 * i - 2, "/home/massawi33/svg/ILS/" + i + ".svg");
-			}
+			//	best_fitness = this.evol(bestsolution, i);
+			//	Console.WriteLine(i + " : " + best_fitness);
+			//	this.exportSVG(i, 2 * i - 2, "/home/massawi33/svg/ILS/" + i + ".svg");
+			//}
 
 
 
@@ -429,8 +431,8 @@ namespace Projet_Firing_squad
 
 		public void Test_ILS(int taille_square , int nbeval_hill, int nbeval_ils, int nb_perturbation ){
 
-			//int best_square = 0;
-			//int[] best_rules = new int[216];
+			int best_square = 0;
+			int[] best_rules = new int[216];
 			//int[] resolved_rules = null;
 			//int[] nb_de_fusiller_atteints = new int[nb];
 			//Automata automateTest = new Automata(taille);
@@ -445,9 +447,20 @@ namespace Projet_Firing_squad
 
 				initTest.init(reglesTest);
 
-				this.ILS(reglesTest, taille_square , nbeval_hill,nbeval_ils,nb_perturbation);
+				best_rules = this.ILS(reglesTest, taille_square , nbeval_hill,nbeval_ils,nb_perturbation);
+				best_square = this.f (best_rules, taille_square);
 				
+			StreamWriter fichier = new StreamWriter("/home/massawi33/svg/ILS/rules.txt",true);
 
+			printToFile(best_square,best_rules,fichier);
+
+			for (int i = 2; i <= best_square  ; i++) {
+
+				int best_fitness = this.evol(best_rules, i);
+				Console.WriteLine(i + " : " + best_fitness);
+				this.exportSVG(i, 2 * i - 2, "/home/massawi33/svg/ILS/" + i + ".svg");
+			}
+				
 				
 		}
 
@@ -590,6 +603,161 @@ namespace Projet_Firing_squad
 				this.exportSVG(i, 2 * i - 2, "/home/massawi33/svg/HB/" + i + ".svg");
 			}
 
+
+		}
+
+		//************************************************
+		// Algorithme Evolutionaire_ILS
+		//************************************************
+
+		public void Evolutionaire_ILS(int taille_square, int nbeval_hill ,int nbeval_ils ,int nbGeneration, int nbPopulation , int nb_population_voulu , int nb_mutation , int nb_perturbation_ils){
+
+			//int[] Population = new int[nbPopulation];
+			//int[] P2 = null;
+			//int[] P3 = null;
+			Initialization initTest = new Initialization();
+			int[] reglesTest = new int[216];
+			ArrayList<int[]> Population = new ArrayList<int[]> ();
+			int best_fitnesse = -1;
+			int position_best_fitensse = -1;
+			ArrayList<int> best_population = new ArrayList<int> ();
+			//int nb_population_voulu = 4; // doit etre pair
+			int nb_croisement = 50;
+
+			Console.WriteLine("begin initialisation");
+			for (int i = 0; i < nbPopulation; i++) { //inisialisation des population voulu
+
+				initTest.init(reglesTest);
+				Population.Add (this.ILS (reglesTest, taille_square,nbeval_hill,nbeval_ils,nb_perturbation_ils));
+			}
+			//initTest.init(reglesTest);
+			//P1 = this.Hill_Climber_Best(reglesTest, taille_square , nbeval);
+			//initTest.init(reglesTest);
+			//P2 = this.Hill_Climber_Best(reglesTest, taille_square , nbeval);
+			//initTest.init(reglesTest);
+			//P3 = this.Hill_Climber_Best(reglesTest, taille_square , nbeval);
+			//int f1 = this.f(P1, taille_square);
+			//int f2 = this.f(P2, taille_square);
+			//int f3 = this.f(P3, taille_square);
+			//Console.WriteLine( f1 +" "+ f2 + " "+f3);
+
+			/*for(int i = 0 ; i < nbPopulation ; i++){ // affichage des fitnesse 
+
+				int f1 = this.f(Population[i], taille_square);
+				Console.WriteLine(f1);
+
+
+			}*/
+			Random rdm = new Random ();
+			int rdm_int_1 = 0;
+			int rdm_int_2 = 0;
+			int fitness_provisoire_1 = -1;
+			int fitness_provisoire_2 = -1;
+
+			for (int genration = 0; genration < nbGeneration; genration++) {
+
+				for (int j = 0; j < nb_population_voulu; j++) { // nb_population_voulu , c'est le nombre de tournoi est il doit etre obligatoirement pair , pour les croisement
+
+					rdm_int_1 = rdm.Next (nbPopulation);
+					rdm_int_2 = rdm.Next (nbPopulation);
+
+					fitness_provisoire_1 = this.f (Population [rdm_int_1], taille_square);
+					fitness_provisoire_2 = this.f (Population [rdm_int_2], taille_square);
+
+					if (fitness_provisoire_1 > fitness_provisoire_2) {
+
+						best_population.Add (rdm_int_1);
+
+					} else {
+
+						best_population.Add (rdm_int_2);
+
+					}
+
+
+
+				}
+
+				for (int i = 0; i < nb_croisement; i++) { // croisement
+
+					//Random rdm = new Random ();
+					int rdm_int = -1;
+					int c = 216;
+					rdm_int = rdm.Next (c);
+					for (int j = 0; j < best_population.Count; j += 2) {
+
+						int[] pop = Population [best_population [j]];
+						int[] pop2 = Population [best_population [j + 1]];
+						//int k = pop.Count();
+						int provisoire = pop [rdm_int];  
+						pop [rdm_int] = pop2 [rdm_int];
+						pop2 [rdm_int] = provisoire;
+						Population [best_population [j]] = pop;
+						Population [best_population [j + 1]] = pop2;
+					}
+					//int zizo;
+				}
+
+
+
+				for (int i = 0; i < nbPopulation; i++) {
+
+					if (best_population.Contains (i)) {
+
+						for (int j = 0; j < nb_mutation; j++) {
+
+							int c = 216;
+							int rdm_int = rdm.Next(c);
+							Population[i] = this.Neighbors_Rules(Population[i],rdm_int,rdm.Next(4));
+
+
+
+
+						}
+
+						Population.Add (this.ILS (Population [i], taille_square,nbeval_hill,nbeval_ils,nb_perturbation_ils));
+						//Population.RemoveAt (i);
+					}
+
+
+
+
+				}
+
+			}
+
+			best_fitnesse = -1;
+			position_best_fitensse = -1;
+
+			for (int i = 0; i < nbPopulation; i++) {
+
+				int f1 = this.f (Population [i], taille_square);
+				//Console.WriteLine (f1);
+				if (f1 > best_fitnesse) {
+
+					best_fitnesse = f1;
+					position_best_fitensse = i;
+					StreamWriter file = new StreamWriter("/home/massawi33/svg/EVO_ILS/EVO_nb_fusi.txt",true);
+					file.WriteLine (best_fitnesse);
+					file.Close ();
+
+
+				}
+
+
+
+			}
+
+			StreamWriter fichier = new StreamWriter("/home/massawi33/svg/EVO_ILS/rules.txt",true);
+
+			printToFile(best_fitnesse,Population [position_best_fitensse],fichier);
+
+			for (int i = 2; i <= taille_square; i++) {
+
+				best_fitnesse = this.evol(Population [position_best_fitensse], i);
+				Console.WriteLine(i + " : " + best_fitnesse);
+				this.exportSVG(i, 2 * i - 2, "/home/massawi33/svg/EVO_ILS/" + i + ".svg");
+			}
 
 		}
 
