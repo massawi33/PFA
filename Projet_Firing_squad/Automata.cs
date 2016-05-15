@@ -586,27 +586,43 @@ namespace Projet_Firing_squad
 		// Test ILS
 		//************************************************
 
-		public void Test_ILS(int taille_square , int nbeval_hill, int nbeval_ils, int nb_perturbation ){
+		public void Test_ILS(int taille_square , int nbeval_hill, int nbeval_ils, int nb_perturbation , int nb ){
 
 			int best_square = 0;
 			int[] best_rules = new int[216];
-			//int[] resolved_rules = null;
-			//int[] nb_de_fusiller_atteints = new int[nb];
+			int[] resolved_rules = null;
+			int[] nb_de_fusiller_atteints = new int[nb];
 			//Automata automateTest = new Automata(taille);
 
-			//int nb_square = 0;
+			int nb_square = 0;
 			Console.WriteLine("beginning of the algorithm");
-
-
+			for (int i = 0; i < nb; i++) {
 
 				Initialization initTest = new Initialization();
 				int[] reglesTest = new int[216];
 
 				initTest.init(reglesTest);
 
-			best_rules = this.ILS(reglesTest, taille_square , nbeval_hill,nbeval_ils,nb_perturbation);
-				best_square = this.f (best_rules, taille_square);
-				
+				resolved_rules = this.ILS_alternative(reglesTest, taille_square , nbeval_hill,nbeval_ils,nb_perturbation);
+				nb_de_fusiller_atteints[i] = this.f(resolved_rules, taille_square);
+
+				if (nb_de_fusiller_atteints[i] > best_square) {
+					for (int j = 0; j < resolved_rules.Length; j++) {
+						best_rules[j] = resolved_rules[j];
+					}
+					best_square = nb_de_fusiller_atteints[i];
+					nb_square = best_square;
+				}
+				Console.WriteLine( nb_de_fusiller_atteints[i] + " square resolved");
+
+				StreamWriter file = new StreamWriter("/home/massawi33/svg/ILS/ILS_nb_fusi.txt",true);
+				file.WriteLine (nb_de_fusiller_atteints [i]);
+				file.Close ();
+
+
+
+			}
+
 			StreamWriter fichier = new StreamWriter("/home/massawi33/svg/ILS/rules.txt",true);
 
 			printToFile(best_square,best_rules,fichier);

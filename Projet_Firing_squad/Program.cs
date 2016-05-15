@@ -67,7 +67,7 @@ namespace Projet_Firing_squad
 			//at.Test_Hill_Climber (taille,10,100000000);
 			//at.Test_Hill_Climber_best(taille,100,10000);
 			//at.Evolutionaire_modifier(20,1000,5,10,4);
-			at.Test_ILS(20,10000,1000000,20);
+			//at.Test_ILS(20,100000,100000,20,10);
 			//at.Evolutionaire_Simple(20,10000,5,100,4,50);
 			//at.Evolutionaire_ILS(20,1000000,1000000,5,100,4,50,200);
 			stopwatch.Stop();
