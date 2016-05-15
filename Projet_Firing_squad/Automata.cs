@@ -297,6 +297,72 @@ namespace Projet_Firing_squad
 
 
 
+		//**************************************************
+		// Hill Climber First Alternative
+		//**************************************************
+
+		public int[] Hill_Climber_alternative (int[] rules, int sizeMax, int nbeval)
+		{
+			//ArrayList<int[]>  liste_all_neigbors = Possible_neighbors (rules);
+			int[] bestSolutions = rules;
+			Random rdm = new Random ();
+			//int curentFitness = this.f (rules, sizeMax);
+			//int bestFitness = curentFitness;
+			int rdm_int = -1;
+			//int[] regles = new int[2];
+			//int[] regles ;
+			int[] new_rules;
+			int best_fit = 0;
+			int new_fit = 0;
+
+
+
+
+			for (int i = 0; i < nbeval; i++) {
+				/*if (liste_all_neigbors.Count == 0) {
+					break;
+				}*/
+
+				//int c = liste_all_neigbors.Count;
+				//rdm_int = rdm.Next (liste_all_neigbors.Count);
+				int c = 0;
+				while(true){
+					rdm_int = rdm.Next (bestSolutions.Length);
+					c = rdm.Next(4);
+					if (editable_rule(bestSolutions[rdm_int])) {
+						if (bestSolutions [rdm_int] != c) {
+							break;
+						}
+					}
+
+				}
+				//bool bl = true;
+				//bl = editable_rule (0);
+
+				//regles = liste_all_neigbors [rdm_int];
+				//liste_all_neigbors.RemoveAt (rdm_int);// couteux
+				
+				new_rules = Neighbors_Rules (bestSolutions,rdm_int,c);
+
+				best_fit = this.f (bestSolutions, sizeMax);// recalculage 
+				new_fit = this.f (new_rules, sizeMax);
+
+
+				if (new_fit >= best_fit) {
+
+					bestSolutions = (int[])new_rules.Clone();
+					/*for (int j = 0; j < bestSolutions.Length; j++) {
+						bestSolutions[j] = new_rules[j];
+					}*/
+					//liste_all_neigbors.Clear();
+					//liste_all_neigbors = Possible_neighbors (bestSolutions);
+				}
+
+
+			}
+			return bestSolutions;
+
+		}
 
 		//**************************************************
 		// Hill Climber First 
@@ -351,6 +417,97 @@ namespace Projet_Firing_squad
 			
 		}
 
+		/// <summary>
+		/// IL the specified rules, sizeMax, nbeval_hill, nbeval_ils and nb_perturbation.
+		/// </summary>
+		/// <param name="rules">Rules.</param>
+		/// <param name="sizeMax">Size max.</param>
+		/// <param name="nbeval_hill">Nbeval hill.</param>
+		/// <param name="nbeval_ils">Nbeval ils.</param>
+		/// <param name="nb_perturbation">Nb perturbation.</param>
+		/// 
+		public int[] ILS_alternative (int[] rules , int sizeMax, int nbeval_hill , int nbeval_ils , int nb_perturbation)
+		{
+			int[] bestsolution = new int[216];
+			int best_fitness = 0;
+			ArrayList<int[]>  liste_all_neigbors = Possible_neighbors (rules);
+			int rdm_int = 0;
+			Random rdm = new Random ();
+			int[] solution = null;
+			int fitnes = 0;
+			int[] regles = new int[2];
+			//Initialization initTest = new Initialization();
+
+			//Console.WriteLine ("begining");
+			//initTest.init(bestsolution);
+
+
+
+			bestsolution = this.Hill_Climber (rules, sizeMax, nbeval_hill);
+			//ArrayList<int[]>  liste_all_neigbors = Possible_neighbors (bestsolution);
+
+			for (int i = 0; i < nbeval_ils; i++) {
+
+				solution = (int[])bestsolution.Clone ();
+
+				for (int j = 0; j < nb_perturbation; j++) {
+					if (liste_all_neigbors.Count == 0) {
+
+						break;
+
+					}
+
+					rdm_int = rdm.Next (liste_all_neigbors.Count);
+					regles = liste_all_neigbors [rdm_int];
+					liste_all_neigbors.RemoveAt (rdm_int);
+					//int c = liste_all_neigbors.Count;
+					//rdm_int = rdm.Next(c);
+					//regles = liste_all_neigbors [rdm_int];
+					//solution =  (int[])Neighbors_Rules (solution, regles [0], regles [1]).Clone();
+					solution = this.Neighbors_Rules(solution,regles[0],regles[1]);
+				}
+
+
+				best_fitness = this.f (bestsolution, sizeMax);
+				fitnes = this.f (solution, fitnes);
+
+				if (fitnes > best_fitness) {
+
+					bestsolution = (int[])solution.Clone ();
+					best_fitness = fitnes;
+					liste_all_neigbors.Clear();
+					liste_all_neigbors = Possible_neighbors (bestsolution);
+					StreamWriter file = new StreamWriter("/home/massawi33/svg/ILS/ILS_nb_fusi.txt",true);
+					file.Write (best_fitness+",");
+					file.Close ();
+
+
+				}
+
+
+
+
+			}
+			return bestsolution;
+
+
+
+			//StreamWriter fichier = new StreamWriter("/home/massawi33/svg/ILS/rules.txt",true);
+
+			//printToFile(best_fitness,bestsolution,fichier);
+
+			//for (int i = 2; i <= sizeMax  ; i++) {
+
+			//	best_fitness = this.evol(bestsolution, i);
+			//	Console.WriteLine(i + " : " + best_fitness);
+			//	this.exportSVG(i, 2 * i - 2, "/home/massawi33/svg/ILS/" + i + ".svg");
+			//}
+
+
+
+
+
+		}
 		//**************************************************
 		// Iterated Local Search
 		//**************************************************
@@ -378,7 +535,7 @@ namespace Projet_Firing_squad
 			for (int i = 0; i < nbeval_ils; i++) {
 
 				solution = (int[])bestsolution.Clone ();
-				for (int j = 0; j < nb_perturbation; j++) { // perturbation 20 fois
+				for (int j = 0; j < nb_perturbation; j++) {
 					//int c = liste_all_neigbors.Count;
 					//rdm_int = rdm.Next(c);
 					//regles = liste_all_neigbors [rdm_int];
@@ -394,7 +551,7 @@ namespace Projet_Firing_squad
 
 					bestsolution = (int[])solution.Clone ();
 					best_fitness = fitnes;
-					StreamWriter file = new StreamWriter("/home/massawi33/svg/EVO/EVO_nb_fusi.txt",true);
+					StreamWriter file = new StreamWriter("/home/massawi33/svg/ILS/ILS_nb_fusi.txt",true);
 					file.Write (best_fitness+",");
 					file.Close ();
 
@@ -447,7 +604,7 @@ namespace Projet_Firing_squad
 
 				initTest.init(reglesTest);
 
-				best_rules = this.ILS(reglesTest, taille_square , nbeval_hill,nbeval_ils,nb_perturbation);
+			best_rules = this.ILS(reglesTest, taille_square , nbeval_hill,nbeval_ils,nb_perturbation);
 				best_square = this.f (best_rules, taille_square);
 				
 			StreamWriter fichier = new StreamWriter("/home/massawi33/svg/ILS/rules.txt",true);
@@ -733,13 +890,14 @@ namespace Projet_Firing_squad
 
 				int f1 = this.f (Population [i], taille_square);
 				//Console.WriteLine (f1);
+				StreamWriter file = new StreamWriter("/home/massawi33/svg/EVO_ILS/EVO_nb_fusi.txt",true);
+				file.Write (f1+",");
+				file.Close ();
 				if (f1 > best_fitnesse) {
 
 					best_fitnesse = f1;
 					position_best_fitensse = i;
-					StreamWriter file = new StreamWriter("/home/massawi33/svg/EVO_ILS/EVO_nb_fusi.txt",true);
-					file.WriteLine (best_fitnesse);
-					file.Close ();
+
 
 
 				}

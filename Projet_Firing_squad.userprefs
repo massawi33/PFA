@@ -1,9 +1,9 @@
 ﻿<Properties StartupItem="Projet_Firing_squad/Projet_Firing_squad.csproj">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|x86" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Projet_Firing_squad/Automata.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Projet_Firing_squad/Program.cs">
     <Files>
-      <File FileName="Projet_Firing_squad/Program.cs" Line="67" Column="35" />
-      <File FileName="Projet_Firing_squad/Automata.cs" Line="385" Column="6" />
+      <File FileName="Projet_Firing_squad/Program.cs" Line="64" Column="36" />
+      <File FileName="Projet_Firing_squad/Automata.cs" Line="411" Column="6" />
       <File FileName="Projet_Firing_squad/Initialization.cs" Line="1" Column="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>

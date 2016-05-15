@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Diagnostics;
 
 namespace Projet_Firing_squad
 {
@@ -61,12 +62,17 @@ namespace Projet_Firing_squad
 			Console.WriteLine("The End.");*/
 			int taille = 20;
 			Automata at = new Automata (taille);
-			//at.Test_Hill_Climber (taille,1,1000000);
+			Stopwatch stopwatch = new Stopwatch();
+			stopwatch.Start();
+			//at.Test_Hill_Climber (taille,10,100000000);
 			//at.Test_Hill_Climber_best(taille,100,10000);
 			//at.Evolutionaire_modifier(20,1000,5,10,4);
-			at.Test_ILS(20,100000,10000,20);
+			at.Test_ILS(20,10000,1000000,20);
 			//at.Evolutionaire_Simple(20,10000,5,100,4,50);
-			//at.Evolutionaire_ILS(20,100000,10000,5,100,4,50,20);
+			//at.Evolutionaire_ILS(20,1000000,1000000,5,100,4,50,200);
+			stopwatch.Stop();
+			Console.Error.WriteLine("Parallel loop time in milliseconds: {0}",
+				stopwatch.ElapsedMilliseconds);
 
 		}
 
