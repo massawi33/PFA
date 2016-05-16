@@ -3,6 +3,8 @@ using System.IO;
 using System.Collections;
 using C5;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Projet_Firing_squad
 {
@@ -264,6 +266,7 @@ namespace Projet_Firing_squad
 				initTest.init(reglesTest);
 
 				resolved_rules = this.Hill_Climber(reglesTest, taille_square , nbeval);
+
 				nb_de_fusiller_atteints[i] = this.f(resolved_rules, taille_square);
 
 				if (nb_de_fusiller_atteints[i] > best_square) {
@@ -445,21 +448,21 @@ namespace Projet_Firing_squad
 
 			bestsolution = this.Hill_Climber (rules, sizeMax, nbeval_hill);
 			//ArrayList<int[]>  liste_all_neigbors = Possible_neighbors (bestsolution);
-
+			solution = (int[])bestsolution.Clone ();
 			for (int i = 0; i < nbeval_ils; i++) {
 
-				solution = (int[])bestsolution.Clone ();
+
 
 				for (int j = 0; j < nb_perturbation; j++) {
-					if (liste_all_neigbors.Count == 0) {
+					/*if (liste_all_neigbors.Count == 0) {
 
 						break;
 
-					}
+					}*/
 
 					rdm_int = rdm.Next (liste_all_neigbors.Count);
 					regles = liste_all_neigbors [rdm_int];
-					liste_all_neigbors.RemoveAt (rdm_int);
+					//liste_all_neigbors.RemoveAt (rdm_int);
 					//int c = liste_all_neigbors.Count;
 					//rdm_int = rdm.Next(c);
 					//regles = liste_all_neigbors [rdm_int];
@@ -467,16 +470,18 @@ namespace Projet_Firing_squad
 					solution = this.Neighbors_Rules(solution,regles[0],regles[1]);
 				}
 
+				solution = this.Hill_Climber (solution, sizeMax, nbeval_hill);
 
 				best_fitness = this.f (bestsolution, sizeMax);
-				fitnes = this.f (solution, fitnes);
+				fitnes = this.f (solution, sizeMax);
 
-				if (fitnes > best_fitness) {
+				if (fitnes >= best_fitness) {
 
 					bestsolution = (int[])solution.Clone ();
 					best_fitness = fitnes;
 					liste_all_neigbors.Clear();
 					liste_all_neigbors = Possible_neighbors (bestsolution);
+					solution = (int[])bestsolution.Clone ();
 					StreamWriter file = new StreamWriter("/home/massawi33/svg/ILS/ILS_nb_fusi.txt",true);
 					file.Write (best_fitness+",");
 					file.Close ();
@@ -542,10 +547,10 @@ namespace Projet_Firing_squad
 					//solution =  (int[])Neighbors_Rules (solution, regles [0], regles [1]).Clone();
 					solution = this.Neighbors_Rules(solution,rdm.Next(216),rdm.Next(4));
 				}
-
+				solution = this.Hill_Climber (solution, sizeMax, nbeval_hill);
 
 				best_fitness = this.f (bestsolution, sizeMax);
-				fitnes = this.f (solution, fitnes);
+				fitnes = this.f (solution, sizeMax);
 
 				if (fitnes > best_fitness) {
 
@@ -627,7 +632,7 @@ namespace Projet_Firing_squad
 
 			printToFile(best_square,best_rules,fichier);
 
-			for (int i = 2; i <= best_square  ; i++) {
+			for (int i = 2; i <= nb_square  ; i++) {
 
 				int best_fitness = this.evol(best_rules, i);
 				Console.WriteLine(i + " : " + best_fitness);
