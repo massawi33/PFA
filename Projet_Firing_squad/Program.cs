@@ -60,16 +60,16 @@ namespace Projet_Firing_squad
 			}
 
 			Console.WriteLine("The End.");*/
-			int taille = 20;
+			int taille = 25;
 			Automata at = new Automata (taille);
 			Stopwatch stopwatch = new Stopwatch();
 			stopwatch.Start();
-			//at.Test_Hill_Climber (taille,10,100000);
+			at.Test_Hill_Climber (taille,1,10000000);
 			//at.Test_Hill_Climber_best(taille,100,10000);
 			//at.Evolutionaire_modifier(20,1000,5,10,4);
-			at.Test_ILS(20,100000,100000,21,10);
-			//at.Evolutionaire_Simple(20,10000,5,100,4,50);
-			//at.Evolutionaire_ILS(20,1000000,1000000,5,100,4,50,200);
+			at.Test_ILS(taille,100000000,1000000,21,1);
+			//at.Evolutionaire_Simple(20,100000000,5,100,6,20);
+			//at.Evolutionaire_ILS(20,1000000,100,3,10,2,50,21);
 			stopwatch.Stop();
 			Console.Error.WriteLine("Parallel loop time in milliseconds: {0}",
 				stopwatch.ElapsedMilliseconds);

@@ -384,7 +384,7 @@ namespace Projet_Firing_squad
 			int[] new_rules;
 			int best_fit = 0;
 			int new_fit = 0;
-
+			StreamWriter file = new StreamWriter("/home/massawi33/svg/Courbes/HF/HF_nb_fusi.txt",true);
 
 			for (int i = 0; i < nbeval; i++) {
 				if (liste_all_neigbors.Count == 0) {
@@ -412,10 +412,15 @@ namespace Projet_Firing_squad
 					}*/
 					liste_all_neigbors.Clear();
 					liste_all_neigbors = Possible_neighbors (bestSolutions);
+					if (new_fit > best_fit) {
+						file.Write (new_fit + ",");
+					}
+
 				}
 
 
 			}
+			file.Close ();
 			return bestSolutions;
 			
 		}
@@ -439,6 +444,7 @@ namespace Projet_Firing_squad
 			int[] solution = null;
 			int fitnes = 0;
 			int[] regles = new int[2];
+			StreamWriter file = new StreamWriter("/home/massawi33/svg/Courbes/ILS/ILS_nb_fusi.txt",true);
 			//Initialization initTest = new Initialization();
 
 			//Console.WriteLine ("begining");
@@ -478,13 +484,16 @@ namespace Projet_Firing_squad
 				if (fitnes >= best_fitness) {
 
 					bestsolution = (int[])solution.Clone ();
+					if (fitnes > best_fitness) {
+						file.Write (fitnes + ",");
+					}
 					best_fitness = fitnes;
 					liste_all_neigbors.Clear();
 					liste_all_neigbors = Possible_neighbors (bestsolution);
 					solution = (int[])bestsolution.Clone ();
-					StreamWriter file = new StreamWriter("/home/massawi33/svg/ILS/ILS_nb_fusi.txt",true);
-					file.Write (best_fitness+",");
-					file.Close ();
+
+					//StreamWriter file = new StreamWriter("./svg/ILS/ILS_nb_fusi.txt",true);
+
 
 
 				}
@@ -493,6 +502,7 @@ namespace Projet_Firing_squad
 
 
 			}
+			file.Close ();
 			return bestsolution;
 
 
@@ -806,7 +816,8 @@ namespace Projet_Firing_squad
 			for (int i = 0; i < nbPopulation; i++) { //inisialisation des population voulu
 
 				initTest.init(reglesTest);
-				Population.Add (this.ILS (reglesTest, taille_square,nbeval_hill,nbeval_ils,nb_perturbation_ils));
+				//Population.Add (this.ILS (reglesTest, taille_square,nbeval_hill,nbeval_ils,nb_perturbation_ils));
+				Population.Add(reglesTest);
 			}
 			//initTest.init(reglesTest);
 			//P1 = this.Hill_Climber_Best(reglesTest, taille_square , nbeval);
@@ -893,7 +904,7 @@ namespace Projet_Firing_squad
 
 						}
 
-						Population.Add (this.ILS (Population [i], taille_square,nbeval_hill,nbeval_ils,nb_perturbation_ils));
+						Population.Add (this.ILS_alternative (Population [i], taille_square,nbeval_hill,nbeval_ils,nb_perturbation_ils));
 						//Population.RemoveAt (i);
 					}
 
@@ -904,17 +915,17 @@ namespace Projet_Firing_squad
 
 			}
 
-			best_fitnesse = -1;
-			position_best_fitensse = -1;
+			//best_fitnesse = -1;
+			//position_best_fitensse = -1;
 
-			for (int i = 0; i < nbPopulation; i++) {
+			for (int i = 0; i < Population.Count; i++) {
 
 				int f1 = this.f (Population [i], taille_square);
 				//Console.WriteLine (f1);
 				StreamWriter file = new StreamWriter("/home/massawi33/svg/EVO_ILS/EVO_nb_fusi.txt",true);
 				file.Write (f1+",");
 				file.Close ();
-				if (f1 > best_fitnesse) {
+				if (f1 >= best_fitnesse) {
 
 					best_fitnesse = f1;
 					position_best_fitensse = i;
@@ -1043,11 +1054,11 @@ namespace Projet_Firing_squad
 			best_fitnesse = -1;
 			position_best_fitensse = -1;
 
-			for (int i = 0; i < nbPopulation; i++) {
+			for (int i = 0; i < Population.Count; i++) {
 
 				int f1 = this.f (Population [i], taille_square);
 				//Console.WriteLine (f1);
-				if (f1 > best_fitnesse) {
+				if (f1 >= best_fitnesse) {
 
 					best_fitnesse = f1;
 					position_best_fitensse = i;
@@ -1080,7 +1091,7 @@ namespace Projet_Firing_squad
 		// Algorithme Evolutionaire_Simple
 		//************************************************
 
-		public void Evolutionaire_Simple(int taille_square, int nbeval ,int nbGeneration, int nbPopulation , int nb_population_voulu , int nb_mutation ){
+		public void Evolutionaire_Simple(int taille_square, int nbevalhill ,int nbGeneration, int nbPopulation , int nb_population_voulu , int nb_mutation ){
 
 			//int[] Population = new int[nbPopulation];
 			//int[] P2 = null;
@@ -1093,12 +1104,14 @@ namespace Projet_Firing_squad
 			ArrayList<int> best_population = new ArrayList<int> ();
 			//int nb_population_voulu = 4; // doit etre pair
 			int nb_croisement = 50;
+			int ftinesse_fichier = -1;
 
 			Console.WriteLine("begin initialisation");
 			for (int i = 0; i < nbPopulation; i++) { //inisialisation des population voulu
 
 				initTest.init(reglesTest);
-				Population.Add (this.Hill_Climber (reglesTest, taille_square, nbeval));
+				//Population.Add (this.Hill_Climber (reglesTest, taille_square, nbevalhill));
+				Population.Add(reglesTest);
 			}
 			//initTest.init(reglesTest);
 			//P1 = this.Hill_Climber_Best(reglesTest, taille_square , nbeval);
@@ -1185,21 +1198,26 @@ namespace Projet_Firing_squad
 						
 						}
 
-						Population.Add (this.Hill_Climber (Population [i], taille_square, nbeval));
+						Population.Add (this.Hill_Climber (Population [i], taille_square, nbevalhill));
 						//Population.RemoveAt (i);
+						ftinesse_fichier = this.f(Population[i],taille_square);
+						StreamWriter file = new StreamWriter("/home/massawi33/svg/EVO/EVO_nb_fusi.txt",true);
+						file.WriteLine (ftinesse_fichier);
+						file.Close ();
 					}
 
 
 
 
 				}
+				best_population.Clear ();
 
 			}
 
 			best_fitnesse = -1;
 			position_best_fitensse = -1;
 
-			for (int i = 0; i < nbPopulation; i++) {
+			for (int i = 0; i < Population.Count; i++) {
 
 				int f1 = this.f (Population [i], taille_square);
 				//Console.WriteLine (f1);
@@ -1207,9 +1225,9 @@ namespace Projet_Firing_squad
 
 					best_fitnesse = f1;
 					position_best_fitensse = i;
-					StreamWriter file = new StreamWriter("/home/massawi33/svg/EVO/EVO_nb_fusi.txt",true);
-					file.WriteLine (best_fitnesse);
-					file.Close ();
+					//StreamWriter file = new StreamWriter("/home/massawi33/svg/EVO/EVO_nb_fusi.txt",true);
+					//file.WriteLine (best_fitnesse);
+					//file.Close ();
 
 
 				}
