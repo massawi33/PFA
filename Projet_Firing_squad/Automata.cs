@@ -395,8 +395,8 @@ namespace Projet_Firing_squad
 				//rdm_int = rdm.Next (liste_all_neigbors.Count);
 				rdm_int = rdm.Next (c);
 
-				regles = liste_all_neigbors [rdm_int];
-				liste_all_neigbors.RemoveAt (rdm_int);// couteux
+				regles = liste_all_neigbors.RemoveAt (rdm_int);
+
 
 				new_rules = Neighbors_Rules (bestSolutions, regles [0], regles [1]);
 
@@ -608,13 +608,13 @@ namespace Projet_Firing_squad
 			int[] resolved_rules = null;
 			int[] nb_de_fusiller_atteints = new int[nb];
 			//Automata automateTest = new Automata(taille);
-
+			StreamWriter file = new StreamWriter("/home/massawi33/svg/ILS/ILS_nb_fusi.txt",true);
 			int nb_square = 0;
 			Console.WriteLine("beginning of the algorithm");
+			Initialization initTest = new Initialization();
+			int[] reglesTest = new int[216];
 			for (int i = 0; i < nb; i++) {
 
-				Initialization initTest = new Initialization();
-				int[] reglesTest = new int[216];
 
 				initTest.init(reglesTest);
 
@@ -630,7 +630,7 @@ namespace Projet_Firing_squad
 				}
 				Console.WriteLine( nb_de_fusiller_atteints[i] + " square resolved");
 
-				StreamWriter file = new StreamWriter("/home/massawi33/svg/ILS/ILS_nb_fusi.txt",true);
+
 				file.WriteLine (nb_de_fusiller_atteints [i]);
 				file.Close ();
 
@@ -1216,6 +1216,7 @@ namespace Projet_Firing_squad
 
 			best_fitnesse = -1;
 			position_best_fitensse = -1;
+			StreamWriter courbe = new StreamWriter("/home/massawi33/svg/Courbes/EVO/EVO_nb_fusi.txt",true);
 
 			for (int i = 0; i < Population.Count; i++) {
 
@@ -1225,9 +1226,9 @@ namespace Projet_Firing_squad
 
 					best_fitnesse = f1;
 					position_best_fitensse = i;
-					//StreamWriter file = new StreamWriter("/home/massawi33/svg/EVO/EVO_nb_fusi.txt",true);
-					//file.WriteLine (best_fitnesse);
-					//file.Close ();
+
+					courbe.Write (best_fitnesse+",");
+
 
 
 				}
@@ -1235,6 +1236,7 @@ namespace Projet_Firing_squad
 
 
 			}
+			courbe.Close ();
 
 			StreamWriter fichier = new StreamWriter("/home/massawi33/svg/EVO/rules.txt",true);
 
