@@ -322,12 +322,7 @@ namespace Projet_Firing_squad
 
 
 			for (int i = 0; i < nbeval; i++) {
-				/*if (liste_all_neigbors.Count == 0) {
-					break;
-				}*/
-
-				//int c = liste_all_neigbors.Count;
-				//rdm_int = rdm.Next (liste_all_neigbors.Count);
+				
 				int c = 0;
 				while(true){
 					rdm_int = rdm.Next (bestSolutions.Length);
@@ -339,11 +334,7 @@ namespace Projet_Firing_squad
 					}
 
 				}
-				//bool bl = true;
-				//bl = editable_rule (0);
 
-				//regles = liste_all_neigbors [rdm_int];
-				//liste_all_neigbors.RemoveAt (rdm_int);// couteux
 				
 				new_rules = Neighbors_Rules (bestSolutions,rdm_int,c);
 
@@ -354,11 +345,7 @@ namespace Projet_Firing_squad
 				if (new_fit >= best_fit) {
 
 					bestSolutions = (int[])new_rules.Clone();
-					/*for (int j = 0; j < bestSolutions.Length; j++) {
-						bestSolutions[j] = new_rules[j];
-					}*/
-					//liste_all_neigbors.Clear();
-					//liste_all_neigbors = Possible_neighbors (bestSolutions);
+
 				}
 
 
@@ -392,7 +379,7 @@ namespace Projet_Firing_squad
 				}
 
 				int c = liste_all_neigbors.Count;
-				//rdm_int = rdm.Next (liste_all_neigbors.Count);
+
 				rdm_int = rdm.Next (c);
 
 				regles = liste_all_neigbors.RemoveAt (rdm_int);
@@ -407,9 +394,7 @@ namespace Projet_Firing_squad
 				if (new_fit >= best_fit) {
 					
 					bestSolutions = new_rules;
-					/*for (int j = 0; j < bestSolutions.Length; j++) {
-						bestSolutions[j] = new_rules[j];
-					}*/
+
 					liste_all_neigbors.Clear();
 					liste_all_neigbors = Possible_neighbors (bestSolutions);
 					if (new_fit > best_fit) {
@@ -425,15 +410,9 @@ namespace Projet_Firing_squad
 			
 		}
 
-		/// <summary>
-		/// IL the specified rules, sizeMax, nbeval_hill, nbeval_ils and nb_perturbation.
-		/// </summary>
-		/// <param name="rules">Rules.</param>
-		/// <param name="sizeMax">Size max.</param>
-		/// <param name="nbeval_hill">Nbeval hill.</param>
-		/// <param name="nbeval_ils">Nbeval ils.</param>
-		/// <param name="nb_perturbation">Nb perturbation.</param>
-		/// 
+		/* Une alternative du ILS , elle est devenu notre principale algorithme après , vu les meilleurs resultat qu'elle donne
+		 * 
+		 * */
 		public int[] ILS_alternative (int[] rules , int sizeMax, int nbeval_hill , int nbeval_ils , int nb_perturbation)
 		{
 			int[] bestsolution = new int[216];
@@ -445,34 +424,23 @@ namespace Projet_Firing_squad
 			int fitnes = 0;
 			int[] regles = new int[2];
 			StreamWriter file = new StreamWriter("/home/massawi33/svg/Courbes/ILS/ILS_nb_fusi.txt",true);
-			//Initialization initTest = new Initialization();
 
-			//Console.WriteLine ("begining");
-			//initTest.init(bestsolution);
 
 
 
 			bestsolution = this.Hill_Climber (rules, sizeMax, nbeval_hill);
-			//ArrayList<int[]>  liste_all_neigbors = Possible_neighbors (bestsolution);
+
 			solution = (int[])bestsolution.Clone ();
 			for (int i = 0; i < nbeval_ils; i++) {
 
 
 
 				for (int j = 0; j < nb_perturbation; j++) {
-					/*if (liste_all_neigbors.Count == 0) {
-
-						break;
-
-					}*/
+					
 
 					rdm_int = rdm.Next (liste_all_neigbors.Count);
 					regles = liste_all_neigbors [rdm_int];
-					//liste_all_neigbors.RemoveAt (rdm_int);
-					//int c = liste_all_neigbors.Count;
-					//rdm_int = rdm.Next(c);
-					//regles = liste_all_neigbors [rdm_int];
-					//solution =  (int[])Neighbors_Rules (solution, regles [0], regles [1]).Clone();
+
 					solution = this.Neighbors_Rules(solution,regles[0],regles[1]);
 				}
 
@@ -492,7 +460,7 @@ namespace Projet_Firing_squad
 					liste_all_neigbors = Possible_neighbors (bestsolution);
 					solution = (int[])bestsolution.Clone ();
 
-					//StreamWriter file = new StreamWriter("./svg/ILS/ILS_nb_fusi.txt",true);
+
 
 
 
@@ -505,23 +473,6 @@ namespace Projet_Firing_squad
 			file.Close ();
 			return bestsolution;
 
-
-
-			//StreamWriter fichier = new StreamWriter("/home/massawi33/svg/ILS/rules.txt",true);
-
-			//printToFile(best_fitness,bestsolution,fichier);
-
-			//for (int i = 2; i <= sizeMax  ; i++) {
-
-			//	best_fitness = this.evol(bestsolution, i);
-			//	Console.WriteLine(i + " : " + best_fitness);
-			//	this.exportSVG(i, 2 * i - 2, "/home/massawi33/svg/ILS/" + i + ".svg");
-			//}
-
-
-
-
-
 		}
 		//**************************************************
 		// Iterated Local Search
@@ -532,29 +483,22 @@ namespace Projet_Firing_squad
 			int[] bestsolution = new int[216];
 			int best_fitness = 0;
 
-			//int rdm_int = 0;
+
 			Random rdm = new Random ();
 			int[] solution = null;
 			int fitnes = 0;
-			//int[] regles = new int[2];
-			//Initialization initTest = new Initialization();
 
-			//Console.WriteLine ("begining");
-			//initTest.init(bestsolution);
 
 
 
 			bestsolution = this.Hill_Climber (rules, sizeMax, nbeval_hill);
-			//ArrayList<int[]>  liste_all_neigbors = Possible_neighbors (bestsolution);
+
 
 			for (int i = 0; i < nbeval_ils; i++) {
 
 				solution = (int[])bestsolution.Clone ();
 				for (int j = 0; j < nb_perturbation; j++) {
-					//int c = liste_all_neigbors.Count;
-					//rdm_int = rdm.Next(c);
-					//regles = liste_all_neigbors [rdm_int];
-					//solution =  (int[])Neighbors_Rules (solution, regles [0], regles [1]).Clone();
+					
 					solution = this.Neighbors_Rules(solution,rdm.Next(216),rdm.Next(4));
 				}
 				solution = this.Hill_Climber (solution, sizeMax, nbeval_hill);
@@ -581,17 +525,8 @@ namespace Projet_Firing_squad
 
 
 
-			//StreamWriter fichier = new StreamWriter("/home/massawi33/svg/ILS/rules.txt",true);
 
-			//printToFile(best_fitness,bestsolution,fichier);
-
-			//for (int i = 2; i <= sizeMax  ; i++) {
-
-			//	best_fitness = this.evol(bestsolution, i);
-			//	Console.WriteLine(i + " : " + best_fitness);
-			//	this.exportSVG(i, 2 * i - 2, "/home/massawi33/svg/ILS/" + i + ".svg");
-			//}
-
+		
 
 
 			
@@ -661,18 +596,15 @@ namespace Projet_Firing_squad
 		{
 			ArrayList<int[]>  liste_all_neigbors = Possible_neighbors (rules);
 			int[] bestSolutions = rules;
-			//Random rdm = new Random ();
-			//int curentFitness = this.f (rules, sizeMax);
-			//int bestFitness = curentFitness;
-			//int rdm_int = -1;
+
 			int[] regles = new int[2];
-			//int[] regles ;
+
 			int[] new_rules;
 			int best_fit = 0;
 			int new_fit = 0;
-			//int[] exclu = new int[liste_all_neigbors.Count];
+
 			ArrayList<int>  exclu = new ArrayList<int>();
-			//int k = 0;
+
 
 			for (int i = 0; i < nbeval; i++) {
 				if (liste_all_neigbors.Count == 0) {
@@ -682,7 +614,6 @@ namespace Projet_Firing_squad
 				int c = liste_all_neigbors.Count;
 				int position = -1;
 				best_fit = this.f (bestSolutions, sizeMax);// recalculage 
-				//rdm_int = rdm.Next (liste_all_neigbors.Count);
 				for(int j = 0 ; j < c ; j++){
 					if (exclu.Contains (j)) {
 						continue;
@@ -702,7 +633,7 @@ namespace Projet_Firing_squad
 					exclu.Add (position);
 
 					regles = liste_all_neigbors [position];
-					//liste_all_neigbors.RemoveAt (position);
+
 
 					new_rules =  Neighbors_Rules (bestSolutions, regles [0], regles [1]);
 					bestSolutions = (int[])new_rules.Clone();
@@ -711,26 +642,7 @@ namespace Projet_Firing_squad
 					liste_all_neigbors = Possible_neighbors (bestSolutions);
 				}
 
-				//rdm_int = rdm.Next (c);
 
-				//regles = liste_all_neigbors [rdm_int];
-				//liste_all_neigbors.RemoveAt (rdm_int);// couteux
-
-				//new_rules = Neighbors_Rules (bestSolutions, regles [0], regles [1]);
-
-				//best_fit = this.f (bestSolutions, sizeMax);// recalculage 
-				//new_fit = this.f (new_rules, sizeMax);
-
-
-				//if (new_fit >= best_fit) {
-
-				//	bestSolutions = new_rules;
-					/*for (int j = 0; j < bestSolutions.Length; j++) {
-						bestSolutions[j] = new_rules[j];
-					}*/
-				//	liste_all_neigbors.Clear();
-				//	liste_all_neigbors = Possible_neighbors (bestSolutions);
-				//}
 
 
 			}
@@ -800,43 +712,27 @@ namespace Projet_Firing_squad
 
 		public void Evolutionaire_ILS(int taille_square, int nbeval_hill ,int nbeval_ils ,int nbGeneration, int nbPopulation , int nb_population_voulu , int nb_mutation , int nb_perturbation_ils){
 
-			//int[] Population = new int[nbPopulation];
-			//int[] P2 = null;
-			//int[] P3 = null;
+
 			Initialization initTest = new Initialization();
 			int[] reglesTest = new int[216];
 			ArrayList<int[]> Population = new ArrayList<int[]> ();
 			int best_fitnesse = -1;
 			int position_best_fitensse = -1;
 			ArrayList<int> best_population = new ArrayList<int> ();
-			//int nb_population_voulu = 4; // doit etre pair
+
 			int nb_croisement = 50;
 
 			Console.WriteLine("begin initialisation");
 			for (int i = 0; i < nbPopulation; i++) { //inisialisation des population voulu
 
 				initTest.init(reglesTest);
-				//Population.Add (this.ILS (reglesTest, taille_square,nbeval_hill,nbeval_ils,nb_perturbation_ils));
+
 				Population.Add(reglesTest);
 			}
-			//initTest.init(reglesTest);
-			//P1 = this.Hill_Climber_Best(reglesTest, taille_square , nbeval);
-			//initTest.init(reglesTest);
-			//P2 = this.Hill_Climber_Best(reglesTest, taille_square , nbeval);
-			//initTest.init(reglesTest);
-			//P3 = this.Hill_Climber_Best(reglesTest, taille_square , nbeval);
-			//int f1 = this.f(P1, taille_square);
-			//int f2 = this.f(P2, taille_square);
-			//int f3 = this.f(P3, taille_square);
-			//Console.WriteLine( f1 +" "+ f2 + " "+f3);
-
-			/*for(int i = 0 ; i < nbPopulation ; i++){ // affichage des fitnesse 
-
-				int f1 = this.f(Population[i], taille_square);
-				Console.WriteLine(f1);
 
 
-			}*/
+
+		
 			Random rdm = new Random ();
 			int rdm_int_1 = 0;
 			int rdm_int_2 = 0;
@@ -915,8 +811,7 @@ namespace Projet_Firing_squad
 
 			}
 
-			//best_fitnesse = -1;
-			//position_best_fitensse = -1;
+
 
 			for (int i = 0; i < Population.Count; i++) {
 
@@ -975,24 +870,6 @@ namespace Projet_Firing_squad
 				initTest.init(reglesTest);
 				Population.Add (this.Hill_Climber (reglesTest, taille_square, nbeval));
 			}
-			//initTest.init(reglesTest);
-			//P1 = this.Hill_Climber_Best(reglesTest, taille_square , nbeval);
-			//initTest.init(reglesTest);
-			//P2 = this.Hill_Climber_Best(reglesTest, taille_square , nbeval);
-			//initTest.init(reglesTest);
-			//P3 = this.Hill_Climber_Best(reglesTest, taille_square , nbeval);
-			//int f1 = this.f(P1, taille_square);
-			//int f2 = this.f(P2, taille_square);
-			//int f3 = this.f(P3, taille_square);
-			//Console.WriteLine( f1 +" "+ f2 + " "+f3);
-
-			/*for(int i = 0 ; i < nbPopulation ; i++){ // affichage des fitnesse 
-
-				int f1 = this.f(Population[i], taille_square);
-				Console.WriteLine(f1);
-
-
-			}*/
 
 			for (int genration = 0; genration < nbGeneration; genration++) {
 
@@ -1057,7 +934,7 @@ namespace Projet_Firing_squad
 			for (int i = 0; i < Population.Count; i++) {
 
 				int f1 = this.f (Population [i], taille_square);
-				//Console.WriteLine (f1);
+
 				if (f1 >= best_fitnesse) {
 
 					best_fitnesse = f1;
@@ -1091,19 +968,16 @@ namespace Projet_Firing_squad
 		// Algorithme Evolutionaire_Simple
 		//************************************************
 
-		public void Evolutionaire_Simple(int taille_square, int nbevalhill ,int nbGeneration, int nbPopulation , int nb_population_voulu , int nb_mutation ){
+		public void Evolutionaire_Simple(int taille_square, int nbevalhill ,int nbGeneration,int nb_croisement, int nbPopulation , int nb_population_voulu , int nb_mutation ){
 
-			//int[] Population = new int[nbPopulation];
-			//int[] P2 = null;
-			//int[] P3 = null;
+
 			Initialization initTest = new Initialization();
 			int[] reglesTest = new int[216];
 			ArrayList<int[]> Population = new ArrayList<int[]> ();
 			int best_fitnesse = -1;
 			int position_best_fitensse = -1;
 			ArrayList<int> best_population = new ArrayList<int> ();
-			//int nb_population_voulu = 4; // doit etre pair
-			int nb_croisement = 50;
+
 			int ftinesse_fichier = -1;
 
 			Console.WriteLine("begin initialisation");

@@ -68,7 +68,7 @@ namespace Projet_Firing_squad
 			//at.Test_Hill_Climber_best(taille,100,10000);
 			//at.Evolutionaire_modifier(20,1000,5,10,4);
 			//at.Test_ILS(taille,10000,1000,50,10);
-			//at.Evolutionaire_Simple(20,1000000,5,100,2,200);
+			//at.Evolutionaire_Simple(taille,300000,100,10,50,8,4);
 			//at.Evolutionaire_ILS(20,1000000,100,3,10,2,50,21);
 			stopwatch.Stop();
 			Console.Error.WriteLine("Parallel loop time in milliseconds: {0}",
